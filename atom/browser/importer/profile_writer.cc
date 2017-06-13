@@ -62,8 +62,10 @@ bool ProfileWriter::TemplateURLServiceIsLoaded() const {
 }
 
 void ProfileWriter::AddPasswordForm(const autofill::PasswordForm& form) {
-    PasswordStoreFactory::GetForProfile(
-        ProfileManager::GetActiveUserProfile(), ServiceAccessType::EXPLICIT_ACCESS)->AddLogin(form);
+    Profile* active_profile = ProfileManager::GetActiveUserProfile();
+    if (active_profile) {
+      PasswordStoreFactory::GetForProfile(active_profile, ServiceAccessType::EXPLICIT_ACCESS)->AddLogin(form);
+    }
 }
 
 #if defined(OS_WIN)
