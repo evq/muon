@@ -41,7 +41,6 @@ void FirefoxImporter::StartImport(const importer::SourceProfile& source_profile,
     bridge_->NotifyItemEnded(importer::COOKIES);
   }
   if ((items & importer::PASSWORDS) && !cancelled()) {
-    bridge_->NotifyItemStarted(importer::PASSWORDS);
     ImportSitePasswordPrefs();
     bridge_->NotifyItemEnded(importer::PASSWORDS);
   }
@@ -120,10 +119,12 @@ void FirefoxImporter::ImportSitePasswordPrefs() {
 
   while (s.Step() && !cancelled()) {
     autofill::PasswordForm form;
-    std::string origin = s.ColumnString16(0);
-    form.origin.InitCanonical(origin, true);
-    form.signon_realm = origin + '/';
+    base::string16 origin = s.ColumnString16(0);
+    form.origin = GURL(base::StringPiece16(origin));
+    form.signon_realm = base::UTF16ToUTF8(origin) + '/';
     form.blacklisted_by_user = true;
+
+    forms.push_back(form);
   }
 
   if (!cancelled()) {
