@@ -107,11 +107,13 @@ void FirefoxImporter::ImportSitePasswordPrefs() {
     return;
   }
 
-  // See http://searchfox.org/mozilla-central/source/netwerk/base/nsIPermissionManager.idl#61
+  // See http://searchfox.org/mozilla-central/
+  // source/netwerk/base/nsIPermissionManager.idl#61
   // DENY_ACTION=2
   // EXPIRE_NEVER=0
   const char query[] =
-      "SELECT origin FROM moz_perms WHERE type='login-saving' AND permission=2 AND expireType=0";
+      "SELECT origin FROM moz_perms "
+      "WHERE type='login-saving' AND permission=2 AND expireType=0";
 
 
   std::vector<autofill::PasswordForm> forms;
